@@ -53,16 +53,19 @@ namespace TopRock
                 .AddEntityFrameworkStores<toprockContext>()
                 .AddDefaultTokenProviders();
 
-            // enable Google Login
-            // read Google API Keys from appsettings.json
-            var ClientId = Configuration.GetSection("Google")["ClientId"];
-            var ClientSecret = Configuration.GetSection("Google")["ClientSecret"];
+
+            // enable Google, FB Login
+            // read Google, FB API Keys from appsettings.json
 
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = ClientId;
-                    options.ClientSecret = ClientSecret;
+                    options.ClientId = Configuration.GetSection("Google")["ClientId"];
+                    options.ClientSecret = Configuration.GetSection("Google")["ClientSecret"];
+                })
+                .AddFacebook(options => { 
+                    options.AppId = Configuration.GetSection("FaceBook")["AppId"];
+                    options.AppSecret = Configuration.GetSection("FaceBook")["AppSecret"];
                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
