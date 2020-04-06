@@ -66,6 +66,10 @@ namespace TopRock
                 .AddFacebook(options => { 
                     options.AppId = Configuration.GetSection("FaceBook")["AppId"];
                     options.AppSecret = Configuration.GetSection("FaceBook")["AppSecret"];
+                })
+                .AddGitHub(options => {
+                    options.ClientId = Configuration.GetSection("GitHub")["ClientId"];
+                    options.ClientSecret = Configuration.GetSection("GitHub")["ClientSecret"];
                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
