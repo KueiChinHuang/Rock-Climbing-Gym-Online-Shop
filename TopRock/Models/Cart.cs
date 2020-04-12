@@ -7,8 +7,8 @@ namespace TopRock.Models
 {
     public partial class Cart
     {
-        [StringLength(100)]
-        public string CartId { get; set; }
+        [Key]
+        public int CartId { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         [Column(TypeName = "decimal(10, 2)")]

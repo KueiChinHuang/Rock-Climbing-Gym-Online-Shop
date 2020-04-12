@@ -52,10 +52,6 @@ namespace TopRock.Models
 
             modelBuilder.Entity<Cart>(entity =>
             {
-                entity.Property(e => e.CartId)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
-
                 entity.Property(e => e.Quantity).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Username).IsUnicode(false);
