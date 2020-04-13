@@ -16,9 +16,16 @@ namespace TopRock.Controllers
             _context = context;
         }
 
+
+        /*Get: /shop*/
         public IActionResult Index()
         {
-            return View();
+            // return list of categories for the user to browse
+            var categories = _context.Category.OrderBy(c => c.Name).ToList();
+            return View(categories);
         }
+
+
+
     }
 }
