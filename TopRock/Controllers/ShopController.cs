@@ -25,6 +25,17 @@ namespace TopRock.Controllers
             return View(categories);
         }
 
+        /*GET: /browse/catName*/
+        public IActionResult Browse(string category)
+        {
+            // store the selected category name in the ViewBag so we can display in the view heading
+            ViewBag.Category = category;
+
+            // get the list of products for the selected category and pass the list to the view
+            var products = _context.Product.Where(p => p.Category.Name == category).OrderBy(p => p.Name).ToList();
+            return View(products);
+        }
+
 
 
     }
