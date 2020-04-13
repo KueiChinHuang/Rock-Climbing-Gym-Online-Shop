@@ -36,7 +36,13 @@ namespace TopRock.Controllers
             return View(products);
         }
 
-
+        /*GET: /ProdcutDetails/prodName*/
+        public IActionResult ProductDetails(string product)
+        {
+            // use SingleOrDefault to find either 1 exact match or a null object
+            var selectedProduct = _context.Product.SingleOrDefault(p => p.Name == product);
+            return View(selectedProduct);
+        }
 
     }
 }
