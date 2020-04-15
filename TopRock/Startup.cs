@@ -72,7 +72,11 @@ namespace TopRock
                     options.ClientSecret = Configuration.GetSection("GitHub")["ClientSecret"];
                 });
 
+            // add session support
+            services.AddSession();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,12 +100,16 @@ namespace TopRock
 
             app.UseAuthentication();
 
+            // enable session support
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
