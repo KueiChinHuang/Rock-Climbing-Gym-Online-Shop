@@ -188,5 +188,27 @@ namespace TopRock.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout([Bind("FirstName,LastName,Address,City,Province,PostalCode,Phone")] Models.Order order)
+        {
+            // auto-fill the date, user, and total properties rather than let the user enter these values
+            order.OrderDate = DateTime.Now;
+            order.UserId = User.Identity.Name;
+
+            var cartItems = _context.Cart.Where(c => c.Username == User.Identity.Name);
+            decimal cartTotal = (from c in cartItems
+                                 select c.Quantity * c.Price).Sum();
+
+            order.Total = cartTotal;
+
+            // we will need an extenstion to the .net core session object to store the order object
+            // coming next week
+            // HttpContext.Session.SetString("CartTotal", cartTotal.ToString());
+            HttpContext.Session.SetObject("Order", order);
+
+            return RedirectToAction("Payment");
+        }
     }
 }
