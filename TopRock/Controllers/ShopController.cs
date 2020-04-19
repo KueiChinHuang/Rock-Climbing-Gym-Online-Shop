@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TopRock.Models;
 
 namespace TopRock.Controllers
@@ -108,11 +109,22 @@ namespace TopRock.Controllers
 
                 // now store the cartUSername in a session variable
                 HttpContext.Session.SetString("CartUsername", cartUsername);
-
             }
 
             // send back the username
             return HttpContext.Session.GetString("CartUsername");
+        }
+
+        public IActionResult Cart()
+        {
+            // 1. figure out who the user is
+            var cartUsername = GetCartUsername();
+
+            // 2. query the db to get the user's cart items
+            var cartItems = _context.Cart.Include(c => c.Product).Where(c => c.Username == cartUsername).ToList();
+
+            // 3. load a view and pass the cart items to it for display
+            return View(cartItems);
 
         }
 
