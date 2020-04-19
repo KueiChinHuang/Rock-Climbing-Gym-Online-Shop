@@ -142,9 +142,34 @@ namespace TopRock.Controllers
         }
 
         [Authorize]
-        public IActionResult CheckOut()
+        public IActionResult Checkout()
         {
+            // check if user has been shopping anonymously now that they are logged in
+            MigrateCart();
             return View();
+        }
+
+        private void MigrateCart()
+        {
+            // if user has been shopping anonymously, now attach their items to the username
+            if (HttpContext.Session.GetString("CartUsername") != User.Identity.Name)
+            {
+                var cartUsername = HttpContext.Session.GetString("CartUsername");
+                // get the user's cart items
+                var cartItems = _context.Cart.Where(c => c.Username == cartUsername);
+
+                // loop through the cart items and update the username for each one
+                foreach (var item in cartItems)
+                {
+                    item.Username = User.Identity.Name;
+                    _context.Update(item); // mark the record as modified
+                }
+
+                _context.SaveChanges(); // commit all the updates to the db
+
+                // update the session variable from a GUID to the user's email
+                HttpContext.Session.SetString("CartUsername", User.Identity.Name);
+            }
         }
 
     }
