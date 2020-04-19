@@ -154,15 +154,31 @@ namespace TopRock.Controllers
             // if user has been shopping anonymously, now attach their items to the username
             if (HttpContext.Session.GetString("CartUsername") != User.Identity.Name)
             {
+                // get the GUID username and items in cart
                 var cartUsername = HttpContext.Session.GetString("CartUsername");
-                // get the user's cart items
                 var cartItems = _context.Cart.Where(c => c.Username == cartUsername);
 
-                // loop through the cart items and update the username for each one
+                // loop through the cart items from this GUID
                 foreach (var item in cartItems)
                 {
-                    item.Username = User.Identity.Name;
-                    _context.Update(item); // mark the record as modified
+                    // log-in username: User.Identity.Name
+                    // check if this log-in user has this product already in cart. If so, get the first product and update quantity
+                    var fCartItem = _context.Cart.FirstOrDefault(c => c.ProductId == item.ProductId && c.Username == User.Identity.Name);
+
+                    // if  doesn't exist, migrate the username from GUID to real username in cart
+                    if (fCartItem == null)
+                    {
+                        item.Username = User.Identity.Name;
+                        _context.Update(item); 
+                    }
+                    // if exists, update the quantity of this user's first of this product,
+                    // and remove the record with GUID username from cart table
+                    else
+                    {
+                        fCartItem.Quantity += item.Quantity; // add the new quantity to the existing quantity
+                        _context.Update(fCartItem);
+                        _context.Cart.Remove(item);
+                    }                    
                 }
 
                 _context.SaveChanges(); // commit all the updates to the db
