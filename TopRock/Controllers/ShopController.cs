@@ -125,8 +125,19 @@ namespace TopRock.Controllers
 
             // 3. load a view and pass the cart items to it for display
             return View(cartItems);
-
         }
 
+        public IActionResult RemoveFromCart(int id)
+        {
+            //get the object the user wants to delete
+            var cartItem = _context.Cart.SingleOrDefault(c => c.CartId == id);
+
+            // delete the object
+            _context.Cart.Remove(cartItem);
+            _context.SaveChanges();
+
+            // redirect to the updated cart page where the deleted item should be gone
+            return RedirectToAction("Cart");
+        }
     }
 }

@@ -3,52 +3,62 @@
 @{
     ViewData["Title"] = "Cart";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal total = 0;
+    decimal eachTotal = 0;
 }
 
 <h1>Cart</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                @Html.DisplayNameFor(model => model.Product)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Quantity)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
+            <th class="text-center">
+                Total
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
+            eachTotal = 0;
+            eachTotal += item.Quantity * item.Price;
+            total += eachTotal;
+
         <tr>
             <td>
+                <a asp-controller="Shop" asp-action="ProductDetails" asp-route-product="@item.Product.Name">@item.Product.Name</a>
+            </td>
+            <td class="text-right">
+                @String.Format("{0:c}", item.Price)
+            </td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
+            <td class="text-right">
+                @String.Format("{0:c}", eachTotal)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
+                <a asp-action="RemoveFromCart" asp-route-id="@item.CartId" onclick="return confirmDelete();">Delete</a>
             </td>
         </tr>
-}
+        }
+        <tr>
+            <td colspan="3"></td>
+            <td class="text-right">@String.Format("{0:c}", total)</td>
+            <td>
+                <a asp-controller="Shop" asp-action="Index" class="btn btn-primary"><< Keep Shopping</a>
+                <a asp-controller="Shop" asp-action="Checkout" class="btn btn-primary">Checkout</a>
+            </td>
+        </tr>
     </tbody>
 </table>
