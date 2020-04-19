@@ -139,5 +139,11 @@ namespace TopRock.Controllers
             // redirect to the updated cart page where the deleted item should be gone
             return RedirectToAction("Cart");
         }
+
+        public IActionResult CheckOut()
+        {
+            return View();
+        }
+
     }
 }
