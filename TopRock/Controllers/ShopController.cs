@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TopRock.Models;
 
 namespace TopRock.Controllers
@@ -14,11 +15,19 @@ namespace TopRock.Controllers
     {
         private readonly toprockContext _context;
 
-        public ShopController(toprockContext context)
-        {
-            _context = context;
-        }
+        // add configuration so controller can read config values from appsettings.json
+        private IConfiguration _configuration;
 
+        // constructor - method to create an instance of this class
+        // Dependency Injection
+        public ShopController(toprockContext context, IConfiguration configuration)
+        {
+            // accept in an instance of our db connection class and use this object to connect
+            _context = context;
+
+            // accept an instance of the configuration object so we can read appsettings
+            _configuration = configuration;
+        }
 
         /*Get: /shop*/
         public IActionResult Index()
