@@ -217,6 +217,7 @@ namespace TopRock.Controllers
             return RedirectToAction("Payment");
         }
 
+        [Authorize]
         public IActionResult Payment()
         {
             // set up payment page to show the order total

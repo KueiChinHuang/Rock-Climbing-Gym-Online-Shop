@@ -6,3 +6,14 @@
 
 <h1>Payment</h1>
 
+<h2>Order Total: @String.Format("{0:c}", ViewBag.Total)</h2>
+<form method="post">
+    <script src="https://checkout.stripe.com/checkout.js"
+            class="stripe-button"
+            data-amount="@ViewBag.CentsTotal"
+            data-name="Top-Rock"
+            data-currency="cad"
+            data-key="@ViewBag.PublishableKey">
+    </script>
+</form>
+
