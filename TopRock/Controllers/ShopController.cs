@@ -210,5 +210,20 @@ namespace TopRock.Controllers
 
             return RedirectToAction("Payment");
         }
+
+        public IActionResult Payment()
+        {
+            // set up payment page to show the order total
+
+            // 1. Get the order from te session variable & cast it as an Order object
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
+
+            // 2. Use viebag to display total and pass the amount to Stripe
+            ViewBag.Total = order.Total;
+            ViewBag.CentsTotal = order.Total * 100; // staipe was amount in cents, not dollars + cents
+            ViewBag.PublishableKey = _configuration.GetSection("Stripe")["PublishableKey"];
+
+            return View();
+        }
     }
 }
