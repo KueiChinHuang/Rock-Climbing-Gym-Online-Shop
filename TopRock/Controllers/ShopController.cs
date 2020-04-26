@@ -203,9 +203,6 @@ namespace TopRock.Controllers
 
             order.Total = cartTotal;
 
-            // we will need an extenstion to the .net core session object to store the order object
-            // coming next week
-            // HttpContext.Session.SetString("CartTotal", cartTotal.ToString());
             HttpContext.Session.SetObject("Order", order);
 
             return RedirectToAction("Payment");
