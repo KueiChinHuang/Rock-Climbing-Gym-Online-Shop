@@ -178,7 +178,7 @@ namespace TopRock.Controllers
                     if (fCartItem == null)
                     {
                         item.Username = User.Identity.Name;
-                        _context.Update(item); 
+                        _context.Update(item);
                     }
                     // if exists, update the quantity of this user's first of this product,
                     // and remove the record with GUID username from cart table
@@ -187,7 +187,7 @@ namespace TopRock.Controllers
                         fCartItem.Quantity += item.Quantity; // add the new quantity to the existing quantity
                         _context.Update(fCartItem);
                         _context.Cart.Remove(item);
-                    }                    
+                    }
                 }
 
                 _context.SaveChanges(); // commit all the updates to the db
@@ -237,6 +237,16 @@ namespace TopRock.Controllers
             var cartItems = _context.Cart.Include(c => c.Product).Where(c => c.Username == cartUsername).ToList();
 
             return View(cartItems);
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Payment(string stripeEmail, string stripeToken)
+        {
+
+            return RedirectToAction("Details", "Orders");
         }
     }
 }
