@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Stripe;
 using TopRock.Models;
 
 namespace TopRock.Controllers
@@ -245,8 +246,61 @@ namespace TopRock.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Payment(string stripeEmail, string stripeToken)
         {
+            // send payment to stripe
+            StripeConfiguration.ApiKey = _configuration.GetSection("Stripe")["SecretKey"];
+            var cartUsername = HttpContext.Session.GetString("CartUsername");
+            var cartItems = _context.Cart.Where(c => c.Username == cartUsername);
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
 
-            return RedirectToAction("Details", "Orders");
+            // new stripe payment attempt
+            var customerService = new CustomerService();
+            var chargeService = new ChargeService();
+
+            // new customer; email from payment form
+            var customer = customerService.Create(new CustomerCreateOptions
+            {
+                Email = stripeEmail,
+                Source = stripeToken
+            });
+
+            // new charge using customer created above
+            var charge = chargeService.Create(new ChargeCreateOptions
+            {
+                Amount = Convert.ToInt32(order.Total * 100),
+                Description = "Top Rock Purchase",
+                Currency = "cad",
+                Customer = customer.Id
+            });
+
+            // generate and save a new order
+            _context.Order.Add(order); 
+            _context.SaveChanges(); // The new OrderId PK is populate automatically
+
+            // save order details
+            foreach (var item in cartItems)
+            {
+                var orderDetail = new OrderDetail
+                {
+                    OrderId = order.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    Price = item.Price
+                };
+
+                _context.OrderDetail.Add(orderDetail);
+            }
+            _context.SaveChanges();
+
+            // delete from cart
+            foreach(var item in cartItems)
+            {
+                _context.Cart.Remove(item);
+            }
+            _context.SaveChanges();
+
+            // confirmation / receipt for the new OrderId
+            // rederict to Details method, in Order controller, and passes in the new id: /Orders/Details/2000
+            return RedirectToAction("Details", "Orders", new { id = order.OrderId });
         }
     }
 }
