@@ -227,7 +227,7 @@ namespace TopRock.Controllers
 
             // 2. Use viebag to display total and pass the amount to Stripe
             ViewBag.Total = order.Total;
-            ViewBag.CentsTotal = order.Total * 100; // staipe was amount in cents, not dollars + cents
+            ViewBag.CentsTotal = order.Total * 100;
             ViewBag.PublishableKey = _configuration.GetSection("Stripe")["PublishableKey"];
 
             // 1. figure out who the user is
