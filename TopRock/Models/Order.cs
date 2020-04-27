@@ -14,6 +14,7 @@ namespace TopRock.Models
 
         public int OrderId { get; set; }
         [Column(TypeName = "datetime")]
+        [Display(Name ="Order Date")]
         public DateTime OrderDate { get; set; }
         [Required]
         [StringLength(100)]
