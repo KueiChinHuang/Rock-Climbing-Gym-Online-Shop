@@ -23,18 +23,21 @@ namespace TopRock.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Order.ToListAsync());
+            var username = User.Identity.Name;
+            return View(await _context.Order.Where(c => c.UserId == username).ToListAsync());
         }
 
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var username = User.Identity.Name;
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order
+            var order = await _context.Order.Where(c=>c.UserId == username)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
