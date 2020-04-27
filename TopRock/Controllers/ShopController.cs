@@ -231,6 +231,11 @@ namespace TopRock.Controllers
             ViewBag.CentsTotal = order.Total * 100;
             ViewBag.PublishableKey = _configuration.GetSection("Stripe")["PublishableKey"];
 
+            ViewBag.Name = order.FirstName + " " + order.LastName;
+            ViewBag.Address = order.Address + ", " + order.City + ", " + order.Province + " " + order.PostalCode;
+            ViewBag.Phone = order.Phone;
+            
+
             // 1. figure out who the user is
             var cartUsername = GetCartUsername();
 
