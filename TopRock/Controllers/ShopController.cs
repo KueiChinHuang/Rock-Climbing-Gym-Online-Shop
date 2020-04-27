@@ -230,7 +230,13 @@ namespace TopRock.Controllers
             ViewBag.CentsTotal = order.Total * 100; // staipe was amount in cents, not dollars + cents
             ViewBag.PublishableKey = _configuration.GetSection("Stripe")["PublishableKey"];
 
-            return View();
+            // 1. figure out who the user is
+            var cartUsername = GetCartUsername();
+
+            // 2. query the db to get the user's cart items
+            var cartItems = _context.Cart.Include(c => c.Product).Where(c => c.Username == cartUsername).ToList();
+
+            return View(cartItems);
         }
     }
 }
