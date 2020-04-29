@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using TopRock.Models;
 
 namespace TopRock.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class ProductsController : Controller
     {
         private readonly toprockContext _context;
@@ -18,6 +20,7 @@ namespace TopRock.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         // GET: Products
         public async Task<IActionResult> Index()
         {
