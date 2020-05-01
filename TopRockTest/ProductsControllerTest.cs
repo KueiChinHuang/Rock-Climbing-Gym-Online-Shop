@@ -88,5 +88,12 @@ namespace TopRockTest
             var viewResult = (ViewResult)result;
             CollectionAssert.AreEqual(products.OrderBy(p => p.Name).ToList(), (List<Product>)viewResult.Model);
         }
+
+        [TestMethod]
+        public void DetailMissingId()
+        {
+            var result = productsController.Details(null).Result;
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
     }
 }

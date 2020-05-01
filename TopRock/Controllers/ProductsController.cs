@@ -44,7 +44,7 @@ namespace TopRock.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            return View("Details", product);
         }
 
         // GET: Products/Create
