@@ -25,7 +25,7 @@ namespace TopRock.Controllers
         public async Task<IActionResult> Index()
         {
             var toprockContext = _context.Product.Include(p => p.Category);
-            return View(await toprockContext.ToListAsync());
+            return View("Index", await toprockContext.ToListAsync());
         }
 
         // GET: Products/Details/5
