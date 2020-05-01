@@ -90,9 +90,16 @@ namespace TopRockTest
         }
 
         [TestMethod]
-        public void DetailMissingId()
+        public void DetailsMissingId()
         {
             var result = productsController.Details(null).Result;
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void DetailsInvalidId()
+        {
+            var result = productsController.Details(200).Result;
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
     }
