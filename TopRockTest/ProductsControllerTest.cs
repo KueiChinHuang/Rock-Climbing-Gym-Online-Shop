@@ -109,7 +109,6 @@ namespace TopRockTest
             var result = productsController.Details(1).Result;
             var viewResult = (ViewResult)result;
             Assert.AreEqual(products[0], viewResult.Model);
-
         }
     }
 }
