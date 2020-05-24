@@ -51,7 +51,7 @@ namespace TopRock.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Category.OrderBy(c=>c.Name), "CategoryId", "Name");
-            return View();
+            return View("Create");
         }
 
         // POST: Products/Create
@@ -68,7 +68,7 @@ namespace TopRock.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "Name", product.CategoryId);
-            return View(product);
+            return View("Create", product);
         }
 
         // GET: Products/Edit/5

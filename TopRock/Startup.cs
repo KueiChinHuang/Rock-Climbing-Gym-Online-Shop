@@ -63,7 +63,7 @@ namespace TopRock
                     options.ClientId = Configuration.GetSection("Google")["ClientId"];
                     options.ClientSecret = Configuration.GetSection("Google")["ClientSecret"];
                 })
-                .AddFacebook(options => { 
+                .AddFacebook(options => {
                     options.AppId = Configuration.GetSection("FaceBook")["AppId"];
                     options.AppSecret = Configuration.GetSection("FaceBook")["AppSecret"];
                 })
@@ -81,8 +81,16 @@ namespace TopRock
             services.AddSingleton<IConfiguration>(Configuration);
 
             // Register the Swagger services
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "TopRock API";
+                    document.Info.Description = "TopRock's ASP.NET Core web API";
 
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

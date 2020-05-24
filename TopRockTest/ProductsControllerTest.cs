@@ -72,6 +72,10 @@ namespace TopRockTest
             productsController = new ProductsController(_context);
         }
 
+        /**
+         * Test Index Method
+         */
+
         [TestMethod]
         public void IndexReturnCorrectView()
         {
@@ -80,7 +84,6 @@ namespace TopRockTest
             Assert.AreEqual("Index", viewResult.ViewName);
         }
 
-
         [TestMethod]
         public void IndexReturnsProducts()
         {
@@ -88,6 +91,10 @@ namespace TopRockTest
             var viewResult = (ViewResult)result;
             CollectionAssert.AreEqual(products.OrderBy(p => p.Name).ToList(), (List<Product>)viewResult.Model);
         }
+
+        /**
+         * Test Details Method
+         */
 
         [TestMethod]
         public void DetailsMissingId()
@@ -109,6 +116,94 @@ namespace TopRockTest
             var result = productsController.Details(1).Result;
             var viewResult = (ViewResult)result;
             Assert.AreEqual(products[0], viewResult.Model);
+        }
+
+        /**
+         * Test Create Method
+         */
+
+        [TestMethod]
+        public void CreatePostInvalidData()
+        {
+            // arrange -> create product object
+            var product = new Product
+            {
+                ProductId = 99,
+                Price = 9,
+                Category = new Category { CategoryId = 400, Name = "New Cate" }
+            };
+
+            productsController.ModelState.AddModelError("Error", "Fake model error");
+
+            // act
+            var result = productsController.Create(product);
+            var viewResult = (ViewResult)result.Result;
+
+            // assert
+            Assert.AreEqual("Create", viewResult.ViewName);
+        }
+
+
+        [TestMethod]
+        public void CreatePostInvalidDataPopulatesCategories()
+        {
+            // arrange -> create product object
+            var product = new Product
+            {
+                ProductId = 99,
+                Price = 9,
+                Category = new Category { CategoryId = 400, Name = "New Cate" }
+            };
+
+            productsController.ModelState.AddModelError("Error", "Fake model error");
+
+            // act
+            var result = productsController.Create(product);
+            var viewResult = (ViewResult)result.Result;
+
+            // assert
+            Assert.IsNotNull(viewResult.ViewData["CategoryId"]);
+        }
+
+
+        [TestMethod]
+        public void CreatePostAddsProduct()
+        {
+            // arrange -> create product object
+            var product = new Product
+            {
+                ProductId = 99,
+                Name = "New Product",
+                Price = 9,
+                Category = new Category { CategoryId = 400, Name = "New Cate" }
+            };
+
+            // act
+            var result = productsController.Create(product);
+
+            // assert
+            Assert.AreEqual(_context.Product.LastOrDefault(), product);
+        }
+
+
+        [TestMethod]
+        public void CreatePostRedirectsToIndex()
+        {
+            // arrange -> create product object
+            var product = new Product
+            {
+                ProductId = 99,
+                Name = "New Product",
+                Price = 9,
+                Category = new Category { CategoryId = 400, Name = "New Cate" }
+            };
+
+            // act
+            var result = productsController.Create(product);
+            var redirectResult = (RedirectToActionResult)result.Result;
+
+            // assert
+            Assert.AreEqual("Index", redirectResult.ActionName);
         }
     }
 }
