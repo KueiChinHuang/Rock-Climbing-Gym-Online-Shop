@@ -18,6 +18,7 @@ namespace TopRock.Models
         public DateTime OrderDate { get; set; }
         [Required]
         [StringLength(100)]
+        [Display(Name ="User ID")]
         public string UserId { get; set; }
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Total { get; set; }
@@ -40,6 +41,7 @@ namespace TopRock.Models
         public string Province { get; set; }
         [Required]
         [StringLength(10)]
+        [Display(Name ="Postal Code")]
         public string PostalCode { get; set; }
         [Required]
         [StringLength(15)]
