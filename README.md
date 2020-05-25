@@ -1,7 +1,9 @@
 # Rock Climbing Gym Online Shop
 1. This online shop allows administrator to create, edit, and delete products.
 2. This online shop allows customers to register and shop online.
-3. Authentication using external providers, including Google, Facebook, and Github.
+3. This online shop allows customers to register using Google, Facebook, and Github.
+4. Customers can browse and add the products into a cart.
+5. Customers can review their payment after they've paid.
 
 ## Skillset involved in this project
 - MVC Framework
