@@ -5,20 +5,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h1>Shop Our @ViewBag.Category</h1>
+    <h1>@ViewBag.Category at TopRock</h1>
 
-<section>
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-sm-6 col-lg-4 mb-3">
-                <div class="card mb-3 text-center h-100">
-                    <div class="card-body">
-                        <a asp-controller="Shop" asp-action="ProductDetails" asp-route-product="@item.Name">@item.Name</a>
-                        <h5>@String.Format("{0:c}", @item.Price)</h5>
+    <section>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                var imagePath = "/img/" + @item.Name + ".jpg";
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card mb-3 text-center h-100">
+                        <div class="card-body">
+                            <a asp-controller="Shop" asp-action="ProductDetails" asp-route-product="@item.Name">
+                                <h3>@item.Name</h3>
+                                <h5>@String.Format("{0:c}", @item.Price)</h5>
+                                <img class="shopPic" alt="@item.Name" src="@imagePath" />
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-</section>
+            }
+        </div>
+        <a href="https://localhost:44304/Shop" onclick="window.history.go(-1); return false;" class="btn btn-primary"><< Last Page</a>
+    </section>
