@@ -2,7 +2,6 @@
 
 @{
     String productName = @Model.Name;
-    var imagePath = "/img/" + @productName +".jpg";
 
     ViewData["Title"] = @productName;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,7 +12,7 @@
 
 <form asp-action="AddToCart">
     <div>
-        <img class="detailPic" src="@imagePath" alt="@productName" />
+        <img class="detailPic" alt="@Model.Photo" src="~/img/@Model.Photo" />
         <dl class="row">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Description)
